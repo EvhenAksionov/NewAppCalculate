@@ -7,8 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
     
     @IBOutlet private weak var aTextField: UITextField!
     @IBOutlet private weak var bTextField: UITextField!
@@ -16,85 +19,75 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var resultLabel: UILabel!
     
-    // MARK: func validation
-    func textFieldIsEmpty (message: String) {
-        let TextFieldIsEmptyAlert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        TextFieldIsEmptyAlert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-        self.present(TextFieldIsEmptyAlert, animated: true)
+    
+    @IBOutlet var tebleView: UITableView!
+    
+    func showAlert(with message: String) {
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+        present(alert, animated: true)
     }
     
     
     @IBAction func calculate() {
         
-        guard let aText = aTextField.text,
-              let bText = bTextField.text,
-              let cText = cTextField.text
-              else {return}
-
-        guard !aText.isEmpty else {
-            textFieldIsEmpty(message: "a is empty")
-            return}
-        guard !bText.isEmpty else {
-            textFieldIsEmpty(message: "b is empty")
-            return}
-        guard !cText.isEmpty else {
-            textFieldIsEmpty(message: "c is empty")
-            return}
-        
-        guard let a = Float(aText),
-              let b = Float(bText),
-              let c = Float(cText)
-                else {return}
-        
-        guard a != .zero else {
-            textFieldIsEmpty(message: "a can`t = 0")
+        guard let aText = aTextField.text, !aText.isEmpty else {
+            showAlert(with: "a is empty")
+            return
+        }
+        guard let bText = bTextField.text, !bText.isEmpty else {
+            showAlert(with: "b is empty")
+            return
+        }
+        guard let cText = cTextField.text, !cText.isEmpty else {
+            showAlert(with: "c is empty")
             return
         }
         
-            let d = pow(b,2) - (4 * a * c)
-            
-        enum Result {
-                case noRoots
-                case oneRoot
-                case twoRoots
-            }
+        //TODO: - add validation alerts
+#warning("add validation alerts")
+        guard let a = Float(aText),
+              let b = Float(bText),
+              let c = Float(cText) else { return }
         
-        var calculate1 = Result.noRoots
+        guard a != .zero else {
+            showAlert(with: "a can`t = 0")
+            return
+        }
         
+        let d = pow(b,2) - (4 * a * c)
+        var currentResult: Result = .noRoots
         
-        
-        switch calculate1{
-        case .noRoots:
+        if d < .zero {
             resultLabel.text = "дійсних коренів немає"
-        case .oneRoot:
+            currentResult = .noRoots
+        } else if d == .zero {
             let x = -b / (2 * a)
             resultLabel.text = "x = \(x)"
-        case .twoRoots:
+            currentResult = .oneRoot(result: x)
+        } else if d > .zero {
             let sqrtDicriminant = sqrt(d)
             let x1 = (-b + sqrtDicriminant) / (2 * a)
             let x2 = (-b - (sqrtDicriminant)) / (2 * a)
             resultLabel.text = "x1 = \(round((1000 * x1) / 1000)), x2 = \(round((1000 * x2) / 1000))"
+            currentResult = .twoRoots(result1: x1, result2: x2)
         }
         
-        guard d >= .zero else {
-            calculate1 = Result.noRoots
-            return
-        }
-        guard d > 0 || d < 0 else {
-            calculate1 = Result.oneRoot
-            return
-        }
-        guard d <= 0 else {
-            calculate1 = Result.twoRoots
-            return
-        }
+        
+        
+        
+        
+        //        let userDefaults = UserDefaults.standard
+        
+        
+        
     }
-}
-        
-
-        
-  
-
     
-
-
+    
+    
+    
+    
+    
+    
+    
+    
